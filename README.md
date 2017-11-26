@@ -23,6 +23,7 @@ This application allows you to send/receive a file over a concurrent server usin
 * Server: Background thread infinitely pinging all the receptor-type sockets and removing the non-responding ones, acting like a cleaner
 * Server: Logger
 * Certificate support
+* Embedded web browser on the "about" pane that opens this GitHub page
 
 ## Getting started
 
