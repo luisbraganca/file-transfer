@@ -74,5 +74,5 @@ The rest of the project isn't that much commented but it's mainly JavaFX operati
 ## Authors
 
 * **Luís Bragança Silva** - *Initial work*
-* **João Marques Capinha** - *Initial work*
 * **Pedro Fernandes Costa** - *Initial work*
+* **João Marques Capinha** - *Initial work*
