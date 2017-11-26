@@ -17,7 +17,7 @@ public class FileSend {
     /**
      *
      */
-    private final static String SERVER_IP = "5.249.23.60";
+    private final static String SERVER_IP = "REPLACE.WITH.SERVER.IP";
 
     /**
      * Socket port to use when transfering files

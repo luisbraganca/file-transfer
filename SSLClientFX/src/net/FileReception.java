@@ -14,7 +14,7 @@ import java.io.*;
  */
 public class FileReception {
 
-    private final static String SERVER_IP = "5.249.23.60";
+    private final static String SERVER_IP = "REPLACE.WITH.SERVER.IP";
     private final static int SERVER_PORT = 6000;
     private final static int MAX_BUFFER_SIZE = 1024 * 16;
 
