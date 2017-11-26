@@ -13,22 +13,30 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.File;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 /**
- *
  * @author lbsilva
  */
-public class HtmlPage extends Stage
-{
+public class HtmlPage extends Stage {
 
     public HtmlPage(String link) {
         VBox root = new VBox();
         Scene scene = new Scene(root);
-        setTitle("FileSender - Page");
+        setTitle("FileSend - Page");
         final WebView browser = new WebView();
         final WebEngine webEngine = browser.getEngine();
-        webEngine.load(link);
+        try {
+            httpsLoad(webEngine, link);
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            e.printStackTrace();
+        }
         root.getChildren().add(browser);
         VBox.setVgrow(browser, Priority.ALWAYS);
         getIcons().add(new Image(getClass().getResourceAsStream(".." + File.separator + "images" + File.separator + "logo.png")));
@@ -36,4 +44,25 @@ public class HtmlPage extends Stage
         setMaximized(true);
     }
 
+    public static void httpsLoad(WebEngine webEngine, String link) throws KeyManagementException, NoSuchAlgorithmException {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        webEngine.load(link);
+    }
 }
