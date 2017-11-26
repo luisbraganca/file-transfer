@@ -49,6 +49,16 @@ Now you're able to import it on the client keystore:
 ```
 "\Program Files\Java\jdk1.8.0_131\bin\keytool.exe" -import -file filetransfer.cer -alias filetransfer -keystore truststore.jks
 ```
+To import your keystore:
+```java
+System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
+System.setProperty("javax.net.ssl.keyStorePassword", "keyStorePassword");
+```
+To import your truststore:
+```java
+System.setProperty("javax.net.ssl.trustStore", "truststore.jks");
+System.setProperty("javax.net.ssl.trustStorePassword", "trustStorePassword");
+```
 
 ### Resources
 
