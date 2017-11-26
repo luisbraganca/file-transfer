@@ -10,7 +10,7 @@ import java.io.IOException;
  * Created by lbsilva on 26-Nov-17.
  */
 public abstract class FileTransmission {
-    
+
     /**
      * Server IP
      */
