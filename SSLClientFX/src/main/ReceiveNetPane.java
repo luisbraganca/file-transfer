@@ -71,9 +71,9 @@ public class ReceiveNetPane extends NetPane {
                         fileReception = new FileReception(pathTextField.getText());
                     } catch (IOException | HandshakeException e) {
                         Platform.runLater(() -> {
-                            new AlertWindow("Error", "Some unknown error ocurred.");
+                            new AlertWindow("Error", "Some unknown error ocurred.").show();
                             e.printStackTrace();
-                            close();
+                            cancel();
                         });
                     }
                     Platform.runLater(() -> id.setText("Your ID is: " + fileReception.getId()));
@@ -85,6 +85,8 @@ public class ReceiveNetPane extends NetPane {
                 } catch (Exception ex) {
                     Platform.runLater(() -> {
                         new AlertWindow("Error", ex.getMessage()).show();
+                        ex.printStackTrace();
+                        cancel();
                     });
                 }
             }).start();
@@ -95,12 +97,19 @@ public class ReceiveNetPane extends NetPane {
             id.setText("Retreiving ID from server...");
         }
 
+        private void cancel() {
+            try {
+                fileReception.closeConnection();
+            } catch (Exception ignored) {
+            }
+            fileReception = null;
+            close();
+        }
+
         private void createCancelButton() {
             receiveButton = new Button("Cancel");
             receiveButton.setOnAction(event -> {
-                fileReception.closeConnection();
-                fileReception = null;
-                close();
+                cancel();
             });
         }
 
