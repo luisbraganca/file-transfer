@@ -18,11 +18,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.FileSend;
+import net.HandshakeException;
+import net.UnreachableHostException;
 
 import java.io.File;
 
 /**
- *
  * @author lbsilva
  */
 public class SendNetPane extends NetPane {
@@ -52,6 +53,7 @@ public class SendNetPane extends NetPane {
 
         private TextField id;
         private Button sendButton;
+        private FileSend fileSend;
 
         public SendWindow() {
             super();
@@ -75,19 +77,32 @@ public class SendNetPane extends NetPane {
             });
         }
 
+        private void send() {
+            try {
+                fileSend = new FileSend(pathTextField.getText(), id.getText());
+                fileSend.start();
+                new AlertWindow("Finished", fileSend.getStatus()).show();
+                close();
+            } catch (UnreachableHostException | HandshakeException ex) {
+                new AlertWindow("Error", "Server down?").show();
+                cancel();
+            } catch (Exception ex) {
+                new AlertWindow("Error", ex.getMessage()).show();
+                cancel();
+            }
+        }
+
         private void createSendButton() {
             sendButton = new Button("Send");
             sendButton.setOnAction(event -> {
-                try {
-                    FileSend fileSend = new FileSend(pathTextField.getText(), id.getText());
-                    fileSend.start();
-                    new AlertWindow("Finished", fileSend.getStatus()).show();
-                    close();
-                } catch (Exception ex) {
-                    new AlertWindow("Error", ex.getMessage()).show();
-                    close();
-                }
+                send();
             });
+        }
+
+        private void cancel() {
+            if (fileSend != null) fileSend.closeConnection();
+            fileSend = null;
+            close();
         }
 
         private void createWindow() {

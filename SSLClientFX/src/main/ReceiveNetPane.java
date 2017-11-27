@@ -17,11 +17,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.FileReception;
-import net.HandshakeException;
-import sun.nio.ch.Net;
+import net.UnreachableHostException;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @author lbsilva
@@ -67,24 +65,21 @@ public class ReceiveNetPane extends NetPane {
         private void ready() {
             new Thread(() -> {
                 try {
-                    try {
-                        fileReception = new FileReception(pathTextField.getText());
-                    } catch (IOException | HandshakeException e) {
-                        Platform.runLater(() -> {
-                            new AlertWindow("Error", "Some unknown error ocurred.").show();
-                            e.printStackTrace();
-                            cancel();
-                        });
-                    }
+                    fileReception = new FileReception(pathTextField.getText());
                     Platform.runLater(() -> id.setText("Your ID is: " + fileReception.getId()));
                     fileReception.start();
                     Platform.runLater(() -> {
                         new AlertWindow("Finished", fileReception.getStatus()).show();
                         close();
                     });
+                } catch (UnreachableHostException ex) {
+                    Platform.runLater(() -> {
+                        new AlertWindow("Error", "Server down?").show();
+                        cancel();
+                    });
                 } catch (Exception ex) {
                     Platform.runLater(() -> {
-                        new AlertWindow("Error", ex.getMessage()).show();
+                        new AlertWindow("Error", "Some unknown error ocurred.").show();
                         ex.printStackTrace();
                         cancel();
                     });
@@ -98,10 +93,7 @@ public class ReceiveNetPane extends NetPane {
         }
 
         private void cancel() {
-            try {
-                fileReception.closeConnection();
-            } catch (Exception ignored) {
-            }
+            if (null != fileReception) fileReception.closeConnection();
             fileReception = null;
             close();
         }
