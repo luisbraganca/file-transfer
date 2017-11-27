@@ -60,7 +60,19 @@ public abstract class FileTransmission {
             SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
             sslSocket = (SSLSocket) sslSocketFactory.createSocket(SERVER_IP, SERVER_PORT);
         } catch (IOException ex) {
-            throw new UnreachableHostException("Unreachable Host.");
+            if (!canceled) throw new UnreachableHostException("Unreachable Host.");
+        }
+    }
+
+    /**
+     * Tries to safely close the connection, not crashing the app
+     * if it doesn't succeed in closing the connection safely
+     */
+    public void closeConnection() {
+        canceled = true;
+        try {
+            sslSocket.close();
+        } catch (Exception ignored) {
         }
     }
 

@@ -27,7 +27,7 @@ public class FileReception extends FileTransmission {
 //        if (file.exists()) { // In case you don't want to allow the user to replace existent files
 //            throw new FileAlreadyExistsException("File \""+path+"\" already exists.");
 //        }
-        handshake();
+        if (!canceled) handshake();
     }
 
     /**
@@ -44,15 +44,11 @@ public class FileReception extends FileTransmission {
      * if it doesn't succeed in closing the connection safely
      */
     public void closeConnection() {
-        canceled = true;
         try {
             new Transmission(sslSocket).sendText("CANCEL");
-        } catch (IOException ignored) {
+        } catch (Exception ignored) {
         }
-        try {
-            sslSocket.close();
-        } catch (IOException ignored) {
-        }
+        super.closeConnection();
     }
 
     /**
