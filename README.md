@@ -23,6 +23,7 @@ This application allows you to send/receive a file over a concurrent server usin
 * Server: Background thread infinitely pinging all the receptor-type sockets and removing the non-responding ones, acting like a cleaner
 * Server: Logger
 * Certificate support
+* Embedded web browser on the "about" pane that opens this GitHub page
 
 ## Getting started
 
@@ -47,6 +48,16 @@ To export the Public Key Certificate, run:
 Now you're able to import it on the client keystore:
 ```
 "\Program Files\Java\jdk1.8.0_131\bin\keytool.exe" -import -file filetransfer.cer -alias filetransfer -keystore truststore.jks
+```
+To import your keystore:
+```java
+System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
+System.setProperty("javax.net.ssl.keyStorePassword", "keyStorePassword");
+```
+To import your truststore:
+```java
+System.setProperty("javax.net.ssl.trustStore", "truststore.jks");
+System.setProperty("javax.net.ssl.trustStorePassword", "trustStorePassword");
 ```
 
 ### Resources
